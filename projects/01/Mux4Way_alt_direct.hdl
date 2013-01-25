@@ -1,0 +1,43 @@
+/** 
+ * Multiplexor. 
+ * If 
+ *  sel == 00 then out = a,
+ *  sel == 01 then out = b,
+ *  sel == 10 then out = c,
+ *  sel == 11 then out = d.
+ */
+
+CHIP Mux4Way {
+
+    IN a, b, c, d, sel[2];
+    OUT out;
+
+    PARTS:
+    
+     // inverted selector pins
+     Not(in=sel[0], out=notSel0);
+     Not(in=sel[1], out=notSel1);
+     
+     // selector for a
+     And(a=notSel1, b=notSel0, out=selA);
+     
+     // selector for b
+     And(a=notSel1, b=sel[0], out=selB);
+     
+     // selector for c
+     And(a=sel[1], b=notSel0, out=selC);
+     
+     // selector for d
+     And(a=sel[1], b=sel[0], out=selD);
+
+     // select in-pin
+     And(a=a, b=selA, out=aOut);
+     And(a=b, b=selB, out=bOut);
+     And(a=c, b=selC, out=cOut);
+     And(a=d, b=selD, out=dOut);
+     
+     // merge to out-pin
+     Or(a=aOut, b=bOut, out=abOut);
+     Or(a=cOut, b=dOut, out=cdOut);
+     Or(a=abOut, b=cdOut, out=out);
+}

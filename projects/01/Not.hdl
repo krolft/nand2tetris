@@ -1,0 +1,30 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Not.hdl
+
+// API
+/**
+ * Not gate: out = not in 
+ */
+
+// Implementation
+/*
+ * a b out
+ * 0 0  1
+ * 0 1  1
+ * 1 0  1
+ * 1 1  0
+ *
+ * Use Not-in pin for both Nand-in pins.
+ * That way we only have to care about the inputs 0-0 and 1-1.
+ * 0 nand 0 = 1, 1 nand 1 = 0
+ * Done!
+ */
+CHIP Not {
+    IN in;
+    OUT out;
+
+    PARTS:
+     Nand(a=in, b=in, out=out);    
+}

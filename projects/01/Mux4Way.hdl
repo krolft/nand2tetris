@@ -1,0 +1,19 @@
+/** 
+ * Multiplexor. 
+ * If 
+ *  sel == 00 then out = a,
+ *  sel == 01 then out = b,
+ *  sel == 10 then out = c,
+ *  sel == 11 then out = d.
+ */
+
+CHIP Mux4Way {
+
+    IN a, b, c, d, sel[2];
+    OUT out;
+
+    PARTS:
+     Mux(a=a, b=b, sel=sel[0], out=abOut);
+     Mux(a=c, b=d, sel=sel[0], out=cdOut);
+     Mux(a=abOut, b=cdOut, sel=sel[1], out=out);
+}

@@ -1,0 +1,14 @@
+/**
+ *  Negates a binary number e.g. 01001 to
+ *                               10110
+ */
+CHIP Neg16 {
+
+    IN  in[16];
+
+    OUT out[16];
+
+    PARTS:
+
+        Xor16(a=in, b=true, out=out);
+}

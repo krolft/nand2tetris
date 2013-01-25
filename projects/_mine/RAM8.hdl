@@ -1,0 +1,42 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/03/a/RAM8.hdl
+
+/**
+ * Memory of 8 registers, each 16-bit wide.
+ * The chip facilitates read and write operations, as follows:
+ *     Read:  out(t) = RAM8[address(t)](t)
+ *     Write: If load(t-1) then RAM8[address(t-1)](t) = in(t-1)
+ * In words: the chip always outputs the value stored at the memory
+ * location specified by address. If load == 1, the in value is loaded
+ * into the memory location specified by address.  This value becomes
+ * available through the out output starting from the next time step.
+ */
+
+CHIP RAM8 {
+    IN in[16], load, address[3];
+    OUT out[16];
+
+    PARTS:
+     // fork load signal
+     DMux8Way(in=load, sel=address,
+        a=load0, b=load1, c=load2, d=load3,
+        e=load4, f=load5, g=load6, h=load7);
+
+     // storage
+     Register(in=in, load=load0, out=word0);
+     Register(in=in, load=load1, out=word1);
+     Register(in=in, load=load2, out=word2);
+     Register(in=in, load=load3, out=word3);
+     Register(in=in, load=load4, out=word4);
+     Register(in=in, load=load5, out=word5);
+     Register(in=in, load=load6, out=word6);
+     Register(in=in, load=load7, out=word7);
+
+     // join signal
+     Mux8Way16(
+        a=word0, b=word1, c=word2, d=word3,
+        e=word4, f=word5, g=word6, h=word7,
+        sel=address, out=out);
+}
