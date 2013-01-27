@@ -10,50 +10,39 @@
 
 // Put your code here.
 
-    @color
+    @color				// -1 -> black or 0 -> white
     M=0
-
     @curPixelWord
     M=0
-
     @curPixelAddress
     M=0
 
-        (CHECK_FOR_INPUT)
-    @KBD
+	(CHECK_FOR_INPUT)
+    @KBD				// store current key in D
     D=M
-    @WHITEN
+    @WHITEN				// key == 0 (no key) -> whiten screen
     D;JEQ
 
-            //[BLACKEN]
-    @SCREEN
-    D=M
-    @CHECK_FOR_INPUT
-    D;JNE               // already black?
-
+	  //(BLACKEN)
     @color
     M=-1                // -1 -> 111111...1
     @FILL_SCREEN
     0;JMP
 
-            (WHITEN)
-    @SCREEN
+		(WHITEN)
+    @SCREEN				// don't paint screen if it is white already
     D=M
     @CHECK_FOR_INPUT
-    D;JEQ               // already white?
+    D;JEQ               
 
-    @color
-    M=0
-    @FILL_SCREEN
-    0;JMP
+    @color				
+    M=0					// 0 -> 000000...0
 
-                (FILL_SCREEN)
-
+			(FILL_SCREEN)
     @curPixelWord       // reset pixel word pointer
     M=0
 
-                    (NEXT_PIXEL)
-
+				(NEXT_PIXEL_WORD)
     @SCREEN
     D=A
     @curPixelWord
@@ -74,7 +63,7 @@
     D=M                 // check if done
     @8192               // 256 rows x 32 words (containing 16 pixels)
     D=A-D
-    @NEXT_PIXEL
+    @NEXT_PIXEL_WORD
     D;JGT
 
     @CHECK_FOR_INPUT
