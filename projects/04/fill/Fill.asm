@@ -12,10 +12,16 @@
 
     @color				// -1 -> black or 0 -> white
     M=0
-    @curPixelWord
+    
+	@curPixelWord		// runs from SCREEN address to end 
     M=0
-    @curPixelAddress
-    M=0
+	
+	@SCREEN
+	D=A
+	@8192				// 256 rows x 32 words (containing 16 pixels)				
+	D=D+A
+	@_MAX_PIXEL_WORD	// last pixel word to draw
+	M=D
 
 	(CHECK_FOR_INPUT)
     @KBD				// store current key in D
@@ -39,30 +45,26 @@
     M=0					// 0 -> 000000...0
 
 			(FILL_SCREEN)
-    @curPixelWord       // reset pixel word pointer
-    M=0
-
-				(NEXT_PIXEL_WORD)
-    @SCREEN
+    @SCREEN				// set screen pointer to screen start
     D=A
-    @curPixelWord
-    D=D+M
-    @curPixelAddress
+	@curPixelWord
     M=D
 
-    @color              // put color in D
+				(NEXT_PIXEL_WORD)
+	@color              // put color in D
     D=M
 
-    @curPixelAddress
+    @curPixelWord		// put color to current screen word
     A=M
     M=D
 
     @curPixelWord       // move to next pixel word
     M=M+1
 
-    D=M                 // check if done
-    @8192               // 256 rows x 32 words (containing 16 pixels)
-    D=A-D
+    @_MAX_PIXEL_WORD	// check if done
+	D=M
+    @curPixelWord               
+    D=D-M
     @NEXT_PIXEL_WORD
     D;JGT
 
